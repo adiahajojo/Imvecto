@@ -2,9 +2,9 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import {
   ArrowUpRightIcon,
-  BookIcon,
-  BuildingIcon,
+  GraduationCapIcon,
   HeartIcon,
+  SunIcon,
   UsersIcon,
 } from "@/components/Icons";
 
@@ -16,8 +16,8 @@ const CATEGORY_CLASS: Record<string, string> = {
 
 function CategoryIcon({ category }: { category: string }) {
   if (category === "CARE") return <HeartIcon />;
-  if (category === "BUILD") return <BookIcon />;
-  return <BuildingIcon />;
+  if (category === "BUILD") return <GraduationCapIcon />;
+  return <SunIcon />;
 }
 
 function amount(value: number) {
@@ -85,3 +85,4 @@ export default async function ExplorePage({
     </div>
   );
 }
+
