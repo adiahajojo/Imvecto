@@ -8,7 +8,15 @@ export const authOptions: NextAuthOptions = {
   providers: [
     EmailProvider({
       from: process.env.EMAIL_FROM,
-      async sendVerificationRequest({ identifier, url, provider }) {
+      async sendVerificationRequest({
+        identifier,
+        url,
+        provider,
+      }: {
+        identifier: string;
+        url: string;
+        provider: { from?: string | string[] };
+      }) {
         const res = await fetch("https://api.resend.com/emails", {
           method: "POST",
           headers: {

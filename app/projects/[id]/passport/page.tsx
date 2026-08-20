@@ -34,92 +34,51 @@ export default async function PassportPage({
     .size;
 
   return (
-    <div>
-      <p>
-        <Link href={`/projects/${project.id}`}>Back to project</Link>
-      </p>
+    <div className="passport-page">
+      <section className="page-intro">
+        <Link href={`/projects/${project.id}`} className="back-link">Back to project</Link>
+        <p className="section-label">Project record</p>
+        <h1>Impact Passport</h1>
+        <p>{project.title} · {project.category} · {project.location}</p>
+      </section>
 
-      <h1>Impact Passport</h1>
-      <p>{project.title}</p>
-      <p>
-        {project.category}, {project.location}
-      </p>
-      <p>Project ID: {project.id}</p>
-      <p>Status: {project.status}</p>
+      <div className="passport-spread">
+        <section className="passport-left">
+          <p className="section-label">At a glance</p>
+          <h2>Funding and identity</h2>
+          <p><strong>Raised</strong><br />{project.raisedAmount} of {project.targetAmount} ({percent} percent)</p>
+          <p><strong>Contributors</strong><br />{contributorCount}</p>
+          <p><strong>Token</strong><br />{project.tokenSymbol}</p>
+          <p><strong>Status</strong><br />{project.status}</p>
+          {project.brickkenTokenAddress && <p><strong>Token contract</strong><br />{project.brickkenTokenAddress}</p>}
+          <a href={`/api/projects/${project.id}/passport`} download className="btn">Download record</a>
+        </section>
 
-      <h2>Funding</h2>
-      <p>
-        Raised {project.raisedAmount} of {project.targetAmount} ({percent}
-        percent)
-      </p>
-      <p>Contributors: {contributorCount}</p>
-      <p>Token symbol: {project.tokenSymbol}</p>
-      {project.brickkenTokenAddress && (
-        <p>Token contract: {project.brickkenTokenAddress}</p>
-      )}
+        <section className="passport-right">
+          <p className="section-label">Evidence trail</p>
+          <h2>Milestones</h2>
+          {project.milestones.length === 0 && <p>No milestones recorded yet.</p>}
+          {project.milestones.map((milestone, index) => (
+            <div key={milestone.id} className="milestone-row">
+              <span className={milestone.status === "PENDING" ? "stamp stamp--pending" : "stamp"}>{String(index + 1).padStart(2, "0")}</span>
+              <div className="milestone-text"><strong>{milestone.title}</strong><p>{milestone.description}</p>{milestone.evidenceUrl && <p><a href={milestone.evidenceUrl}>Open evidence</a></p>}</div>
+            </div>
+          ))}
 
-      <h2>Milestones</h2>
-      {project.milestones.length === 0 && <p>No milestones recorded yet.</p>}
-      <ul>
-        {project.milestones.map((m) => (
-          <li key={m.id}>
-            <strong>{m.title}</strong>, {m.status}
-            {m.description && <p>{m.description}</p>}
-            {m.evidenceUrl && (
-              <p>
-                <a href={m.evidenceUrl}>Evidence</a>
-              </p>
-            )}
-          </li>
-        ))}
-      </ul>
+          {project.impactMetrics.length > 0 && <div className="detail-section"><p className="section-label">Measures</p><h2>Impact</h2>{project.impactMetrics.map((metric) => <p key={metric.id}><strong>{metric.metricName}</strong><br />{metric.currentValue} of {metric.targetValue} {metric.unit}</p>)}</div>}
+        </section>
+      </div>
 
-      {project.impactMetrics.length > 0 && (
-        <>
-          <h2>Impact</h2>
-          <ul>
-            {project.impactMetrics.map((metric) => (
-              <li key={metric.id}>
-                {metric.metricName}: {metric.currentValue} of{" "}
-                {metric.targetValue} {metric.unit}
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      <h2>On-chain record</h2>
-      <p>
-        Every action below happened on the Sepolia test network and can be
-        checked independently, this page does not just state that something
-        happened, it links to proof.
-      </p>
-      {project.transactions.length === 0 && (
-        <p>No on-chain transactions recorded yet.</p>
-      )}
-      <ul>
-        {project.transactions.map((tx) => {
-          const explorerBase = EXPLORER_BY_CHAIN[tx.chainId];
-          return (
-            <li key={tx.id}>
-              {tx.method}, {tx.status}
-              {tx.txHash && explorerBase && (
-                <p>
-                  <a href={`${explorerBase}${tx.txHash}`}>
-                    View on Etherscan
-                  </a>
-                </p>
-              )}
-            </li>
-          );
+      <section className="detail-section">
+        <p className="section-label">Network record</p>
+        <h2>Onchain activity</h2>
+        <p>Activity is linked to the Sepolia test network so each entry can be checked independently.</p>
+        {project.transactions.length === 0 && <p>No network transactions recorded yet.</p>}
+        {project.transactions.map((transaction) => {
+          const explorerBase = EXPLORER_BY_CHAIN[transaction.chainId];
+          return <div key={transaction.id} className="receipt"><span className="receipt-status">{transaction.status}</span><strong>{transaction.method}</strong>{transaction.txHash && explorerBase && <a href={`${explorerBase}${transaction.txHash}`} className="passport-link">View on Etherscan</a>}</div>;
         })}
-      </ul>
-
-      <p>
-        <a href={`/api/projects/${project.id}/passport`} download>
-          Download this passport as JSON
-        </a>
-      </p>
+      </section>
     </div>
   );
 }
