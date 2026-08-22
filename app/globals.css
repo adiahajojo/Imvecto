@@ -162,8 +162,8 @@ ul, ol { list-style: none; padding: 0; margin: 0; }
 .passport-stats span { color: var(--ink-faint); font-size: 0.67rem; }
 .passport-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; color: var(--forest); font-size: 0.76rem; font-weight: 900; }
 .visual-footer { position: relative; z-index: 2; margin-top: auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.14); display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.7); }
-.visual-check { width: 32px; height: 32px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid rgba(255,255,255,0.24); border-radius: 50%; color: #b3d9c6; background: rgba(255,255,255,0.05); }
-.visual-check svg { width: 14px; height: 14px; }
+.visual-check { width: 26px; height: 26px; flex: 0 0 auto; display: grid; place-items: center; border: 1px solid rgba(255,255,255,0.24); border-radius: 50%; color: #b3d9c6; background: rgba(255,255,255,0.05); }
+.visual-check svg { width: 15px; height: 15px; display: block; }
 .visual-footer strong, .visual-footer span { display: block; }
 .visual-footer strong { color: #fff; font-size: 0.72rem; }
 .visual-footer span { margin-top: 2px; font-size: 0.65rem; }

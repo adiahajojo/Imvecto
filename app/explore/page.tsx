@@ -6,6 +6,7 @@ import {
   HeartIcon,
   SunIcon,
   UsersIcon,
+  ZapIcon,
 } from "@/components/Icons";
 
 const CATEGORY_CLASS: Record<string, string> = {
@@ -14,7 +15,8 @@ const CATEGORY_CLASS: Record<string, string> = {
   INFRASTRUCTURE: "tab tab--infrastructure",
 };
 
-function CategoryIcon({ category }: { category: string }) {
+function CategoryIcon({ category, tokenSymbol }: { category: string; tokenSymbol?: string }) {
+  if (tokenSymbol === "SOLA") return <ZapIcon />;
   if (category === "CARE") return <HeartIcon />;
   if (category === "BUILD") return <GraduationCapIcon />;
   return <SunIcon />;
@@ -65,7 +67,7 @@ export default async function ExplorePage({
               <li key={project.id} className="browse-card">
                 <div className="browse-card-top">
                   <span className={`card-icon card-icon--${project.category.toLowerCase()}`}>
-                    <CategoryIcon category={project.category} />
+                    <CategoryIcon category={project.category} tokenSymbol={project.tokenSymbol} />
                   </span>
                   <span className={CATEGORY_CLASS[project.category]}>{project.category}</span>
                 </div>

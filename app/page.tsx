@@ -5,6 +5,8 @@ import {
   CheckIcon,
   FlagIcon,
   GraduationCapIcon,
+  ZapIcon,
+  MapPinIcon,
   HeartIcon,
   ShieldIcon,
   SunIcon,
@@ -17,7 +19,8 @@ const CATEGORY_CLASS: Record<string, string> = {
   INFRASTRUCTURE: "tab tab--infrastructure",
 };
 
-function CategoryIcon({ category }: { category: string }) {
+function CategoryIcon({ category, tokenSymbol }: { category: string; tokenSymbol?: string }) {
+  if (tokenSymbol === "SOLA") return <ZapIcon />;
   if (category === "CARE") return <HeartIcon />;
   if (category === "BUILD") return <GraduationCapIcon />;
   return <SunIcon />;
@@ -77,7 +80,7 @@ export default async function HomePage() {
                 <span>Project signal</span>
                 <span className="passport-status"><span className="network-dot" /> Tracking</span>
               </div>
-              <div className="passport-symbol">{featuredProject ? <CategoryIcon category={featuredProject.category} /> : <UsersIcon />}</div>
+              <div className="passport-symbol">{featuredProject ? <CategoryIcon category={featuredProject.category} tokenSymbol={featuredProject.tokenSymbol} /> : <UsersIcon />}</div>
               <p className="passport-kicker">Featured project</p>
               <h2>{featuredProject?.title || "A new chapter starts here"}</h2>
               <p className="passport-location">{featuredProject?.location || "Open community"}</p>
@@ -89,7 +92,7 @@ export default async function HomePage() {
               <span className="passport-link">View project <ArrowUpRightIcon /></span>
             </Link>
             <div className="visual-footer">
-              <span className="visual-check"><FlagIcon /></span>
+              <span className="visual-check"><MapPinIcon /></span>
               <span><strong>Support should have a visible shape.</strong><span>Field work / 2026</span></span>
             </div>
           </div>
@@ -125,7 +128,7 @@ export default async function HomePage() {
                 <li key={project.id} className="browse-card">
                   <div className="browse-card-top">
                     <span className={`card-icon card-icon--${project.category.toLowerCase()}`}>
-                      <CategoryIcon category={project.category} />
+                      <CategoryIcon category={project.category} tokenSymbol={project.tokenSymbol} />
                     </span>
                     <span className={CATEGORY_CLASS[project.category]}>{project.category}</span>
                   </div>
