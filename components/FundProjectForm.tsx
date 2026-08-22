@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useAccount, useSendTransaction } from "wagmi";
+import { waitForTransactionReceipt } from "wagmi/actions";
+import { wagmiConfig } from "@/lib/wagmi";
 import { useRouter } from "next/navigation";
 
 type Status =
@@ -41,7 +43,7 @@ export function FundProjectForm({
   async function sendPreparedTransactions(transactions: any[]) {
     let lastHash = "";
     for (const tx of transactions) {
-      lastHash = await sendTransactionAsync({
+      const hash = await sendTransactionAsync({
         to: tx.to,
         data: tx.data,
         value: BigInt(tx.value || "0x0"),
@@ -51,6 +53,8 @@ export function FundProjectForm({
           ? BigInt(tx.maxPriorityFeePerGas)
           : undefined,
       });
+      await waitForTransactionReceipt(wagmiConfig, { hash });
+      lastHash = hash;
     }
     return lastHash;
   }

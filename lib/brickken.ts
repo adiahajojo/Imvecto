@@ -1,4 +1,4 @@
-const BRICKKEN_BASE_URL = "https://api.sandbox.brickken.com";
+export const BRICKKEN_BASE_URL = "https://api.sandbox.brickken.com";
 
 export async function brickkenPrepare(method: string, body: Record<string, any>) {
   const res = await fetch(`${BRICKKEN_BASE_URL}/prepare-transactions`, {

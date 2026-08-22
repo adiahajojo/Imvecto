@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { BRICKKEN_BASE_URL } from "@/lib/brickken";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -10,7 +11,7 @@ export async function GET(request: Request) {
   }
 
   const res = await fetch(
-    `${process.env.BRICKKEN_BASE_URL}/get-balance-whitelist?tokenSymbol=${tokenSymbol}&investorEmail=${encodeURIComponent(investorEmail)}`,
+    `${BRICKKEN_BASE_URL}/get-balance-whitelist?tokenSymbol=${tokenSymbol}&investorEmail=${encodeURIComponent(investorEmail)}`,
     { headers: { "x-api-key": process.env.BRICKKEN_API_KEY as string } }
   );
 
