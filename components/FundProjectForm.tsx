@@ -4,6 +4,13 @@ import { useState } from "react";
 import { useAccount, useSendTransaction } from "wagmi";
 import { waitForTransactionReceipt } from "wagmi/actions";
 import { wagmiConfig } from "@/lib/wagmi";
+
+function buildApproveCalldata(spender: string, amount: bigint) {
+  const selector = "095ea7b3";
+  const spenderPadded = spender.toLowerCase().replace("0x", "").padStart(64, "0");
+  const amountPadded = amount.toString(16).padStart(64, "0");
+  return `0x${selector}${spenderPadded}${amountPadded}` as `0x${string}`;
+}
 import { useRouter } from "next/navigation";
 
 type Status =
@@ -89,7 +96,19 @@ export function FundProjectForm({
         await sendPreparedTransactions(whitelistPrepared.transactions);
       }
 
-      // 1. Approve: let the investment contract pull the payment token.
+      // 1a. Zero out any existing allowance first — this sandbox USDT reverts on approve() if a non-zero allowance already exists for the spender.
+      setStatus("preparing-approve");
+      const tokenizerInfoRes = await fetch(`/api/brickken/tokenizer-info?tokenSymbol=${tokenSymbol}`);
+      const tokenizerInfo = await tokenizerInfoRes.json();
+      if (!tokenizerInfoRes.ok) throw new Error(tokenizerInfo.error || "Could not fetch tokenizer info.");
+
+      const resetHash = await sendTransactionAsync({
+        to: tokenizerInfo.paymentTokenAddress as `0x${string}`,
+        data: buildApproveCalldata(tokenizerInfo.escrowAddress, BigInt(0)),
+      });
+      await waitForTransactionReceipt(wagmiConfig, { hash: resetHash });
+
+      // 1b. Approve: let the investment contract pull the payment token.
       setStatus("preparing-approve");
 
       const approveRes = await fetch("/api/brickken/prepare-approve", {
