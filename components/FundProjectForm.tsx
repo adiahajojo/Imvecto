@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 
 type Status =
   | "idle"
+  | "checking-investor"
+  | "whitelisting"
   | "preparing-approve"
   | "approving"
   | "preparing-invest"
@@ -27,6 +29,8 @@ export function FundProjectForm({
 
   const [email, setEmail] = useState("");
   const [amount, setAmount] = useState("");
+  const [investorName, setInvestorName] = useState("");
+  const [investorSurname, setInvestorSurname] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
 
@@ -56,6 +60,31 @@ export function FundProjectForm({
     setError("");
 
     try {
+      // 0. Whitelist: register & whitelist the investor with Brickken if not already known.
+      setStatus("checking-investor");
+      const checkRes = await fetch(
+        `/api/brickken/check-investor?tokenSymbol=${tokenSymbol}&investorEmail=${encodeURIComponent(email)}`
+      );
+      const checkData = await checkRes.json();
+
+      if (!checkData.exists) {
+        setStatus("whitelisting");
+        const whitelistRes = await fetch("/api/brickken/prepare-whitelist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            projectId,
+            investorEmail: email,
+            investorAddress: address,
+            investorName,
+            investorSurname,
+          }),
+        });
+        const whitelistPrepared = await whitelistRes.json();
+        if (!whitelistRes.ok) throw new Error(whitelistPrepared.error || "Whitelisting failed.");
+        await sendPreparedTransactions(whitelistPrepared.transactions);
+      }
+
       // 1. Approve: let the investment contract pull the payment token.
       setStatus("preparing-approve");
 
@@ -153,6 +182,24 @@ export function FundProjectForm({
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </label>
+      <label>
+        Your first name
+        <input
+          type="text"
+          value={investorName}
+          onChange={(e) => setInvestorName(e.target.value)}
+          required
+        />
+      </label>
+      <label>
+        Your surname
+        <input
+          type="text"
+          value={investorSurname}
+          onChange={(e) => setInvestorSurname(e.target.value)}
           required
         />
       </label>

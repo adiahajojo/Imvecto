@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { FundProjectForm } from "@/components/FundProjectForm";
+import { CreatedToast } from "@/components/CreatedToast";
 import { ArrowUpRightIcon, CheckIcon } from "@/components/Icons";
 
 function amount(value: number) {
@@ -10,8 +11,10 @@ function amount(value: number) {
 
 export default async function ProjectPage({
   params,
+  searchParams,
 }: {
   params: { id: string };
+  searchParams: { created?: string };
 }) {
   const project = await prisma.project.findUnique({
     where: { id: params.id },
@@ -29,6 +32,7 @@ export default async function ProjectPage({
 
   return (
     <div className="project-page">
+        {searchParams.created === "1" && <CreatedToast />}
       <section className="detail-head">
         <div>
           <Link href="/explore" className="back-link">Back to project room</Link>

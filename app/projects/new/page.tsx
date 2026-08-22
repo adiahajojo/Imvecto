@@ -58,7 +58,7 @@ export default function NewProjectPage() {
     }
 
     const data = await res.json();
-    router.push(`/projects/${data.project.id}`);
+    router.push(`/projects/${data.project.id}?created=1`);
   }
 
   return (
