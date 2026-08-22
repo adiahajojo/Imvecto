@@ -402,3 +402,6 @@ textarea { min-height: 110px; resize: vertical; }
   .footer-brand { margin-right: 0; max-width: none; }
 }
  
+
+.wallet-control { display: inline-flex; align-items: center; }
+.wallet-label { display: none; }

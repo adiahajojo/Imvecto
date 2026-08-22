@@ -20,6 +20,7 @@ export async function POST(request: Request) {
     const prepared = await brickkenPrepare("newInvest", {
       chainId: "aa36a7",
       tokenSymbol: project.tokenSymbol,
+      paymentTokenSymbol: "USDT",
       investorEmail,
       investorAddress,
       investmentAmount: String(investmentAmount),
