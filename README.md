@@ -21,7 +21,10 @@ hackathon and the AI Academy Nigeria Pitchathon as one unified product.
 ## What's next
 
 1. Test `newInvest` end to end (connect wallet, fund SOLA, confirm
-   contribution + tx hash recorded)
+   contribution + tx hash recorded) — approve step is working (wallet
+   signs, transaction confirmed on Sepolia); currently blocked on
+   Brickken requiring investor registration before newInvest accepts
+   the wallet ("Investor not found"), waiting on Brickken support
 2. Impact Agent — fixed tool set (search_projects, get_project,
    get_project_progress, get_impact_passport, prepare_funding,
    get_milestones, request_evidence). Rule: agent prepares, human
