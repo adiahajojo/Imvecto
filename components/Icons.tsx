@@ -219,3 +219,17 @@ export function MapPinIcon({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function DropletIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}

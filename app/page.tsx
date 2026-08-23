@@ -11,7 +11,7 @@ import {
   ShieldIcon,
   SunIcon,
   UsersIcon,
-} from "@/components/Icons";
+ DropletIcon, BuildingIcon} from "@/components/Icons";
 
 const CATEGORY_CLASS: Record<string, string> = {
   CARE: "tab tab--care",
@@ -19,7 +19,14 @@ const CATEGORY_CLASS: Record<string, string> = {
   INFRASTRUCTURE: "tab tab--infrastructure",
 };
 
-function CategoryIcon({ category, tokenSymbol }: { category: string; tokenSymbol?: string }) {
+function CategoryIcon({ category, tokenSymbol, title }: { category: string; tokenSymbol?: string; title?: string }) {
+  const t = (title || "").toLowerCase();
+  if (t.includes("water") || t.includes("borehole") || t.includes("well")) return <DropletIcon />;
+  if (t.includes("widow") || t.includes("empower") || t.includes("women")) return <HeartIcon />;
+  if (t.includes("solar") || t.includes("power") || t.includes("energy") || t.includes("electric")) return <ZapIcon />;
+  if (t.includes("school") || t.includes("scholar") || t.includes("education") || t.includes("literacy") || t.includes("book")) return <GraduationCapIcon />;
+  if (t.includes("clinic") || t.includes("hospital") || t.includes("medical") || t.includes("surgery") || t.includes("health")) return <ShieldIcon />;
+  if (t.includes("build") || t.includes("construct") || t.includes("house") || t.includes("renovat") || t.includes("shelter")) return <BuildingIcon />;
   if (tokenSymbol === "SOLA") return <ZapIcon />;
   if (category === "CARE") return <HeartIcon />;
   if (category === "BUILD") return <GraduationCapIcon />;
@@ -80,7 +87,7 @@ export default async function HomePage() {
                 <span>Project signal</span>
                 <span className="passport-status"><span className="network-dot" /> Tracking</span>
               </div>
-              <div className="passport-symbol">{featuredProject ? <CategoryIcon category={featuredProject.category} tokenSymbol={featuredProject.tokenSymbol} /> : <UsersIcon />}</div>
+              <div className="passport-symbol">{featuredProject ? <CategoryIcon category={featuredProject.category} tokenSymbol={featuredProject.tokenSymbol} title={featuredProject.title} /> : <UsersIcon />}</div>
               <p className="passport-kicker">Featured project</p>
               <h2>{featuredProject?.title || "A new chapter starts here"}</h2>
               <p className="passport-location">{featuredProject?.location || "Open community"}</p>
@@ -128,7 +135,7 @@ export default async function HomePage() {
                 <li key={project.id} className="browse-card">
                   <div className="browse-card-top">
                     <span className={`card-icon card-icon--${project.category.toLowerCase()}`}>
-                      <CategoryIcon category={project.category} tokenSymbol={project.tokenSymbol} />
+                      <CategoryIcon category={project.category} tokenSymbol={project.tokenSymbol} title={project.title} />
                     </span>
                     <span className={CATEGORY_CLASS[project.category]}>{project.category}</span>
                   </div>
