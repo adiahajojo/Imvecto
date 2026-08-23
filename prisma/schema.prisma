@@ -92,7 +92,7 @@ model Project {
   targetAmount          Float
   raisedAmount          Float           @default(0)
   status                ProjectStatus   @default(DRAFT)
-  tokenSymbol           String
+  tokenSymbol           String @unique
   tokenType             String          @default("RWA_TOKEN")
   brickkenTokenAddress  String?
   createdAt             DateTime        @default(now())
