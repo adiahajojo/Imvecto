@@ -1,12 +1,11 @@
 // OpenRouter client — unified access to Meta Llama models with automatic
 // fallback across free model variants if one is rate-limited or down.
 
-const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1/chat/completions";
+const OPENROUTER_BASE_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 const MODEL_FALLBACK_CHAIN = [
-  "google/gemma-4-31b-it:free",
-  "google/gemma-4-26b-a4b-it:free",
-  "nvidia/nemotron-3-super-120b-a12b:free",
+  "llama-3.3-70b-versatile",
+  "llama-3.1-8b-instant",
 ];
 
 export type ChatMessage = {
@@ -39,7 +38,7 @@ export async function callLlama(
   messages: ChatMessage[],
   tools?: ToolDefinition[]
 ): Promise<LlamaResponse> {
-  const apiKey = process.env.OPENROUTER_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     throw new Error("OPENROUTER_API_KEY is not set.");
   }
@@ -51,7 +50,7 @@ export async function callLlama(
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      models: MODEL_FALLBACK_CHAIN,
+      model: "openai/gpt-oss-20b",
       messages,
       tools,
       tool_choice: tools ? "auto" : undefined,
