@@ -43,6 +43,7 @@ export function FundProjectForm({
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [txHash, setTxHash] = useState("");
+  const [copied, setCopied] = useState(false);
 
   if (!isConnected) {
     return <p>Connect a wallet above to fund this project.</p>;
@@ -193,14 +194,28 @@ export function FundProjectForm({
   }
 
   if (status === "done") {
+    const shortHash = txHash ? `${txHash.slice(0, 10)}...${txHash.slice(-8)}` : "";
+    const copyHash = () => {
+      navigator.clipboard.writeText(txHash);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    };
     return (
       <div>
         <p>Thank you, your contribution is recorded.</p>
-        <p>
-          Transaction:{" "}
-          <a href={`https://sepolia.etherscan.io/tx/${txHash}`} target="_blank" rel="noreferrer">
-            {txHash}
+        <p style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+          <span>Transaction:</span>
+          <a
+            href={`https://sepolia.etherscan.io/tx/${txHash}`}
+            target="_blank"
+            rel="noreferrer"
+            style={{ wordBreak: "break-all" }}
+          >
+            {shortHash}
           </a>
+          <button type="button" onClick={copyHash}>
+            {copied ? "Copied!" : "Copy"}
+          </button>
         </p>
       </div>
     );
