@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 type Msg = { role: string; content: string };
 
@@ -44,7 +46,8 @@ export default function AgentPage() {
       <div style={{ border: "1px solid #ccc", borderRadius: 8, padding: 12, minHeight: 300, marginBottom: 12 }}>
         {messages.map((m, i) => (
           <div key={i} style={{ marginBottom: 8 }}>
-            <strong>{m.role === "user" ? "You" : "Agent"}:</strong> {m.content}
+            <strong>{m.role === "user" ? "You" : "Agent"}:</strong>
+                <div className="markdown-body"><ReactMarkdown remarkPlugins={[remarkGfm]}>{m.content}</ReactMarkdown></div>
           </div>
         ))}
         {loading && <div>Agent is thinking...</div>}

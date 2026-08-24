@@ -19,6 +19,7 @@ export function NavBar() {
 
         <nav className="header-links" aria-label="Main navigation">
           <Link href="/explore">Explore</Link>
+          <Link href="/agent">Agent</Link>
           {session && <Link href="/dashboard">My activity</Link>}
           {isAdmin && <Link href="/admin">Verify</Link>}
         </nav>
