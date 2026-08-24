@@ -11,6 +11,27 @@ function buildApproveCalldata(spender: string, amount: bigint) {
   const amountPadded = amount.toString(16).padStart(64, "0");
   return `0x${selector}${spenderPadded}${amountPadded}` as `0x${string}`;
 }
+
+function friendlyError(message: string): string {
+  const text = message || "";
+  if (text.includes("AccessControl") || text.includes("missing role")) {
+    return "This action needs a different wallet permission than the one connected. Please try again or contact support.";
+  }
+  if (text.toLowerCase().includes("user rejected") || text.toLowerCase().includes("user denied")) {
+    return "The transaction was cancelled in your wallet.";
+  }
+  if (text.toLowerCase().includes("insufficient funds")) {
+    return "This wallet does not have enough funds to complete this transaction.";
+  }
+  if (text.toLowerCase().includes("investor not found")) {
+    return "We could not find your investor record yet. Please try again in a moment.";
+  }
+  if (text.toLowerCase().includes("network") || text.toLowerCase().includes("fetch failed")) {
+    return "A network issue interrupted this step. Please check your connection and try again.";
+  }
+  return "Something went wrong while processing this step. Please try again.";
+}
+
 import { useRouter } from "next/navigation";
 
 type Status =
@@ -188,7 +209,8 @@ export function FundProjectForm({
       setStatus("done");
       router.refresh();
     } catch (err: any) {
-      setError(err.message || "Something went wrong.");
+      console.error("Funding flow error:", err);
+      setError(friendlyError(err.message || ""));
       setStatus("error");
     }
   }
@@ -205,7 +227,7 @@ export function FundProjectForm({
         <p>Thank you, your contribution is recorded.</p>
         <p style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
           <span>Transaction:</span>
-          <a
+          
             href={`https://sepolia.etherscan.io/tx/${txHash}`}
             target="_blank"
             rel="noreferrer"
