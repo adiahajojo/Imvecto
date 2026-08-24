@@ -42,6 +42,7 @@ export function FundProjectForm({
   const [investorSurname, setInvestorSurname] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
+  const [txHash, setTxHash] = useState("");
 
   if (!isConnected) {
     return <p>Connect a wallet above to fund this project.</p>;
@@ -93,7 +94,7 @@ export function FundProjectForm({
         });
         const whitelistPrepared = await whitelistRes.json();
         if (!whitelistRes.ok) throw new Error(whitelistPrepared.error || "Whitelisting failed.");
-        await sendPreparedTransactions(whitelistPrepared.transactions);
+        // Whitelist is now signed and broadcast server-side by the tokenizer wallet; no client signature needed.
       }
 
       // 1a. Zero out any existing allowance first — this sandbox USDT reverts on approve() if a non-zero allowance already exists for the spender.
@@ -160,6 +161,7 @@ export function FundProjectForm({
 
       setStatus("signing");
       const lastHash = await sendPreparedTransactions(prepared.transactions);
+      setTxHash(lastHash);
 
       setStatus("confirming");
 
@@ -191,7 +193,17 @@ export function FundProjectForm({
   }
 
   if (status === "done") {
-    return <p>Thank you, your contribution is recorded.</p>;
+    return (
+      <div>
+        <p>Thank you, your contribution is recorded.</p>
+        <p>
+          Transaction:{" "}
+          <a href={`https://sepolia.etherscan.io/tx/${txHash}`} target="_blank" rel="noreferrer">
+            {txHash}
+          </a>
+        </p>
+      </div>
+    );
   }
 
   const busy = status !== "idle" && status !== "error";
