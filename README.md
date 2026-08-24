@@ -4,6 +4,8 @@
 
 Imvecto is trust infrastructure for impact projects, combining Brickken-tokenized funding on Sepolia with an AI verification and monitoring layer.
 
+Live demo: https://imvecto.vercel.app
+
 ## What's live
 
 - Public browsing: home, explore, individual project pages, no login needed
