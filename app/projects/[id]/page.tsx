@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { FundProjectForm } from "@/components/FundProjectForm";
 import { CreatedToast } from "@/components/CreatedToast";
 import { ArrowUpRightIcon, CheckIcon } from "@/components/Icons";
+import { AISummary } from "@/components/AISummary";
 
 function amount(value: number) {
   return `$${value.toLocaleString()}`;
@@ -39,6 +40,7 @@ export default async function ProjectPage({
           <p className="detail-kicker"><span className={`tab tab--${project.category.toLowerCase()}`}>{project.category}</span>{project.location}</p>
           <h1>{project.title}</h1>
           <p className="detail-description">{project.description}</p>
+          <AISummary projectId={project.id} />
           <div className="detail-actions">
             <Link href={`/projects/${project.id}/passport`} className="btn">Open project passport <ArrowUpRightIcon /></Link>
             <span className="token-pill">{project.tokenSymbol}</span>
