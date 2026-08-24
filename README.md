@@ -39,14 +39,39 @@ Next.js 14 (App Router), TypeScript, Prisma/Postgres (Supabase), NextAuth, Resen
 3. `npm run db:push`
 4. `npm run dev`
 
+## Brickken integration
+
+Imvecto integrates with Brickken's sandbox through the REST API, using `x-api-key` authentication and a signed `signerAddress`.
+
+Methods called:
+
+- `newTokenization`, to create SOLA's tokenized asset
+- `whitelist`, to register and whitelist investors
+- `newSto`, to launch SOLA's offering
+- `newInvest`, to take investor contributions
+- `approve`, as part of the payment token allowance step before investment
+
+All calls run through `/prepare-transactions` and `/send-transactions` against `https://api.sandbox.brickken.com`.
+
 ## A note on the AI model
 
 Imvecto's AI layer was originally scoped around Meta Llama. Meta shifted its flagship model to Muse Spark in April 2026, and major inference providers no longer host general-purpose open Llama chat models. The Impact Agent now runs on Groq (openai/gpt-oss-20b), chosen for free hosting and reliable tool calling, while keeping the same agent architecture so swapping models later is a small change.
 
-## Verified transactions (Sepolia)
+## AI assistance disclosure
 
-- SOLA tokenization: `0x2020cae5109b08725d2b719fce7b632c603fa43659917a8492bc68922bfbc337`
-- SOLA STO: `0xe5482213e9c728210915862a0d29fb752210dd7dad910c96c29896b36175391c`
-- Investor whitelist (tokenizer-signed, server-side): confirmed working
-- Investment (newInvest): `0x80429aab5a358142a8ece8c8e5bc2cbc777638115755fc78596ea4710c7c7ebf`
-- Investment (newInvest, second run): `0x3c3aca84...befe742a` (full hash available in-app via the confirmation screen's copy button)
+Claude (Anthropic) was used as a coding assistant throughout development. All architecture decisions, feature scope, testing, and debugging were done by the developer, who built and tested this project end to end from a mobile device.
+
+## Verified transactions (Sepolia, chainId aa36a7)
+
+| Method | Transaction hash |
+|---|---|
+| newTokenization (SOLA) | `0x2020cae5109b08725d2b719fce7b632c603fa43659917a8492bc68922bfbc337` |
+| newSto (SOLA) | `0xe5482213e9c728210915862a0d29fb752210dd7dad910c96c29896b36175391c` |
+| newInvest | `0x80429aab5a358142a8ece8c8e5bc2cbc777638115755fc78596ea4710c7c7ebf` |
+| newInvest (second run) | `0x3c3aca84...befe742a` (full hash available in-app via the confirmation screen's copy button) |
+
+Investor whitelist calls are signed server-side by the tokenizer wallet and confirmed working; individual hashes are visible in the live app during the funding flow.
+
+## Reward wallet
+
+EVM address for a potential reward: 0xE994d763D7273A0656068157C07F4101fFF777D4
